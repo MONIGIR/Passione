@@ -1,38 +1,58 @@
 import 'react';
-import '../styles/user.css'
-import SideBar from './sideBar';
+import '../styles/user.css';
+import BarraLateral from './barraLateral'; 
 
 const WatchCard = ({ product }) => (
-<div className="CartaProducto">
-    <div className="ContenedorImagen">
-    <img src={product.imageUrl} alt={product.title} className="Imagen-producto" />
+    <div className="CartaProducto">
+        <div className="ContenedorImagen">
+            
+            <img src={product.imageUrl} alt={product.title} className="Imagen-producto" />
+        </div>
+        <div className="ContenedorTexto">
+            <h3 className="titulo">{product.title}</h3>
+            <p className="Modelo">{product.model}</p>
+            <p className="Precio">{product.price}</p>
+        </div>
     </div>
-    <div className="ContenedorTexto">
-    <h3 className="titulo">{product.title}</h3>
-    <p className="Modelo">{product.model}</p>
-    <p className="Precio">{product.price}</p>
-    </div>
-</div>
 );
 
 const App = () => {
-const watchData = Array(8).fill({
-    imageUrl: "", // Aquí puedes colocar una URL de imagen de reloj o usar un placeholder
-    title: "Rolex",
-    model: "Submarine Date",
-    price: "A partir de 180,220 MX$"
-});
+    const watchData = Array(8).fill({
+        imageUrl: "https://via.placeholder.com/150", 
+        title: "Rolex",
+        model: "Submarine Date",
+        price: "A partir de 180,220 MX$"
 
-return (
-    <div className="ContenedorPrincipal">
-    <SideBar />
-    <main className="mainGrid">
-        {watchData.map((product, index) => (
-        <WatchCard key={index} product={product} />
-        ))}
-    </main>
-    </div>
-);
+    });
+    const Botones = [
+        {
+            imagen:'../assets/user.svg',
+            texto:"Usuario",
+            enlace:"#"
+        },
+                {
+            imagen:'../assets/shopping-cart.svg',
+            texto:"Carrito",
+            enlace:"#"
+        },
+                {
+            imagen:'../assets/power.svg',
+            texto:"Cerrar sesión",
+            enlace:"#"
+        },
+    ];
+// Renderizado del dashboard
+    return (
+        <div className="ContenedorPrincipal">
+            <BarraLateral botones={Botones} /> 
+            
+            <main className="mainGrid">
+                {watchData.map((product, index) => (
+                    <WatchCard key={index} product={product} />
+                ))}
+            </main>
+        </div>
+    );
 };
 
 export default App;
