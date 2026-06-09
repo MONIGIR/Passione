@@ -2,6 +2,10 @@ import 'react';
 import '../styles/user.css';
 import BarraLateral from './barraLateral'; 
 
+import IconoUsuario from '../assets/user.svg';
+import IconoCarrito from '../assets/shopping-cart.svg';
+import IconoCerrar from '../assets/power.svg';
+
 const WatchCard = ({ product }) => (
     <div className="CartaProducto">
         <div className="ContenedorImagen">
@@ -26,17 +30,17 @@ const App = () => {
     });
     const Botones = [
         {
-            imagen:'../assets/user.svg',
+            imagen:IconoUsuario,
             texto:"Usuario",
             enlace:"#"
         },
                 {
-            imagen:'../assets/shopping-cart.svg',
+            imagen:IconoCarrito,
             texto:"Carrito",
             enlace:"#"
         },
                 {
-            imagen:'../assets/power.svg',
+            imagen:IconoCerrar,
             texto:"Cerrar sesión",
             enlace:"#"
         },
