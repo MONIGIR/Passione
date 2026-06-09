@@ -1,0 +1,81 @@
+.dashboardContainer {
+display: grid;
+grid-template-columns: 1fr 240px;
+gap: 40px;
+padding: 30px;
+background-color: #ffffff;
+font-family: Arial, sans-serif;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+/* Contenedor Izquierdo */
+.mainLists {
+display: flex;
+flex-direction: column;
+gap: 35px;
+}
+
+/* Tarjetas Grandes Grises */
+.largeCard {
+background-color: #dbdbdb;
+border-radius: 16px;
+padding: 25px 35px;
+}
+
+.largeCard h2 {
+margin-top: 0;
+margin-bottom: 20px;
+font-size: 28px;
+color: #000000;
+font-weight: bold;
+}
+
+.listContent p {
+margin: 8px 0;
+font-family: monospace; /* Mantiene la estética técnica de los códigos de barra */
+font-size: 16px;
+color: #000000;
+font-weight: bold;
+}
+
+/* Distribución horizontal para Top Ventas si se requiere */
+.topVentasGrid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 5px;
+}
+
+/* Contenedor Derecho (Métricas) */
+.sidebarMetrics {
+display: flex;
+flex-direction: column;
+gap: 25px;
+}
+
+/* Tarjetas Pequeñas de Contadores */
+.smallCard {
+background-color: #dbdbdb;
+border-radius: 16px;
+padding: 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+min-height: 110px;
+}
+
+.metricTitle {
+font-size: 15px;
+font-weight: bold;
+color: #000000;
+margin-bottom: 15px;
+  align-self: flex-start; /* Alinea el título arriba a la izquierda de la tarjetita */
+}
+
+.metricNumber {
+font-size: 36px;
+font-weight: bold;
+color: #000000;
+}
