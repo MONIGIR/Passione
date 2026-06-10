@@ -1,0 +1,61 @@
+/* Configuración del diseño base dividiendo la pantalla */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+
+/* Contenido de la derecha que se expande automáticamente */
+.dashboard-main-content {
+  flex: 1;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #212529;
+}
+
+.dashboard-header p {
+  margin: 0.5rem 0 0 0;
+  color: #6c757d;
+}
+
+/* Grid responsivo para las cajas de información */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detailed-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.large-module {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+  min-height: 200px;
+}
+
+/* Esto remueve los espacios por defecto que mete el navegador */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}

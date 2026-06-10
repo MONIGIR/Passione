@@ -2,7 +2,7 @@
 body {
 margin: 0;
 padding: 0;
-background-color: #2D664A;
+background-color: #ffffff;
 font-family: 'IBM Plex Mono', monospace;
 }
 
@@ -43,7 +43,7 @@ max-height: 100%;
 }
 
 .ContenedorTexto {
-background-color: #1F4232;
+background-color: #1f4232;
 color: #E2E2E2;
 padding: 15px;
 }

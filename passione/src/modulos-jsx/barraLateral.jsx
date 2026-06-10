@@ -1,6 +1,5 @@
-import "react";
 import '../styles/BarraLateral.css';
-//                     Lista de botones
+
 const BarraLateral = ({ botones = [] }) => {
     return (
         <aside className="BarraLateral">
@@ -11,13 +10,17 @@ const BarraLateral = ({ botones = [] }) => {
             </div>
             <nav className="IconosLateral">
                 {botones.map((boton, index) => (
-                    <a key={index} href={boton.enlace || "#"} title={boton.texto}>
-                        <img src={boton.imagen} alt={boton.texto} />
+                    <a key={index} href={boton.enlace || "#"} title={boton.texto} className="sidebar-link">
+                        <img 
+                            src={boton.imagen} 
+                            alt={boton.texto} 
+                            className="sidebar-icon" 
+                        />
                     </a>
                 ))}
             </nav>
         </aside>
     );
-}
+};
 
 export default BarraLateral;

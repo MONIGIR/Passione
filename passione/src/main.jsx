@@ -1,14 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-//import { LoginRegister } from "./modulos-jsx/login-register.jsx";
-//import './styles/login.css'
-import './modulos-jsx/barraLateral.jsx';
-import App from './modulos-jsx/userDashboard.jsx';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 
-import './styles/user.css';
-import AdminDashboard from './modulos-jsx/AdminDashboard.jsx';
+// Componente Principal que contiene todo (Dashboard + Barra Lateral + Tarjetas)
+import AdminDash from './modulos-jsx/AdminDashboard.jsx';
+
+// Estilos globales de la aplicación (si tienes uno, ej: index.css)
+// import './styles/index.css'; 
+
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <App />
-    </StrictMode>
-)
+<StrictMode>
+    <AdminDash />
+</StrictMode>
+);

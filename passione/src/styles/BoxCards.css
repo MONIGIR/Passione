@@ -1,0 +1,68 @@
+.infoCarta {
+background: #ffffff;
+border-radius: 8px;
+padding: 1.5rem;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+border-left: 5px solid #6c757d;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.infoCarta:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.CartaPrincipal {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.CartaInformacion {
+display: flex;
+flex-direction: column;
+}
+
+.Cartatitulo {
+font-size: 0.875rem;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: #6c757d;
+font-weight: 600;
+margin-bottom: 0.5rem;
+}
+
+.CartaValor {
+font-size: 1.75rem;
+font-weight: 700;
+color: #212529;
+}
+
+/* Modificadores de estilo según el tipo de tarjeta */
+.infoCarta.primary {
+border-left-color: #0d6efd;
+}
+.infoCarta.primary .CartaIcon {
+color: #0d6efd;
+}
+
+.infoCarta.success {
+border-left-color: #198754;
+}
+.infoCarta.success .CartaIcon {
+color: #198754;
+}
+
+.infoCarta.warning {
+border-left-color: #ffc107;
+}
+.infoCarta.warning .CartaIcon {
+color: #ffc107;
+}
+
+.infoCarta.danger {
+border-left-color: #dc3545;
+}
+.infoCarta.danger .CartaIcon {
+color: #dc3545;
+}
