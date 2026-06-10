@@ -4,7 +4,6 @@ import '../styles/BoxCards.css'
 
 const InfoCarta = ({titulo, valor,icon, tipo}) =>{
     const claseCarta = tipo || 'primary';
-
     return(
         <div className={`infoCarta ${claseCarta}`}>
             <div className="CartaPrincipal">
