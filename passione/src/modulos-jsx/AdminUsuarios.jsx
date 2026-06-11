@@ -8,8 +8,6 @@ import IconOrdenes from '../assets/package.svg';
 import IconInicio from '../assets/house.svg';
 import IconCerrarSesion from '../assets/power.svg';
 import IconUsuario from '../assets/user.svg';
-import IconConfig from '../assets/wrench.svg';
-
 
 
 const GestionUsuarios = () => {
@@ -18,7 +16,6 @@ const GestionUsuarios = () => {
     { imagen: IconInicio, texto: "Inicio", enlace: '' },
     { imagen: IconUsuario, texto: "Usuarios", enlace: '' },
     { imagen: IconInventario, texto: "Inventario", enlace: '#' },
-    { imagen: IconConfig, texto: "Configuracion", enlace: '#' },
     { imagen: IconOrdenes, texto: "Ordenes", enlace: '#' },
     { imagen: IconCerrarSesion, texto: "Cerrar sesion", enlace: '' },
 ];

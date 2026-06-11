@@ -8,7 +8,6 @@ import '../styles/BarraLateral.css';
 import IconUsuario from '../assets/user.svg';
 import IconInicio from '../assets/house.svg';
 import IconInventario from '../assets/book-open-text.svg';
-import IconConfig from '../assets/wrench.svg';
 import IconOrdenes from '../assets/book-open-text.svg';
 import IconCerrarSesion from '../assets/power.svg';
 
@@ -37,7 +36,6 @@ const AdminDash = () => {
     { imagen: IconInicio, texto: "Inicio", enlace: '#' },
     { imagen: IconUsuario, texto: "Usuarios", enlace: '#' },
     { imagen: IconInventario, texto: "Inventario", enlace: '#' },
-    { imagen: IconConfig, texto: "Configuracion", enlace: '#' },
     { imagen: IconOrdenes, texto: "Ordenes", enlace: '#' },
     { imagen: IconCerrarSesion, texto: "Cerrar sesion", enlace: '#' },
   ];

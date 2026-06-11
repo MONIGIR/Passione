@@ -1,0 +1,58 @@
+/* Contenedor de la vista de órdenes */
+.ordenes-view-container {
+width: 100%;
+padding: 10px;
+box-sizing: border-box;
+}
+
+.tabla-ordenes {
+width: 100%;
+border-collapse: collapse;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cabeceras de la tabla */
+.tabla-ordenes thead th {
+padding: 15px 10px;
+font-size: 0.75rem;
+font-weight: bold;
+color: #333;
+text-align: center;
+border-bottom: 1px solid #ddd;
+text-transform: uppercase;
+}
+
+/* Celdas de la tabla */
+.tabla-ordenes tbody td {
+padding: 12px 10px;
+text-align: center;
+font-size: 0.85rem;
+color: #555;
+border-bottom: 1px solid #f0f0f0;
+}
+
+/* Filas vacías o con datos: Efecto zebra opcional */
+.tabla-ordenes tbody tr:nth-child(even) {
+background-color: #fafafa;
+}
+
+/* BOTÓN CANCELAR: Estilo profesional */
+.btn-cancelar {
+background-color: #ff4d4d;
+color: white;
+border: none;
+padding: 6px 12px;
+border-radius: 4px;
+font-size: 0.75rem;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+.btn-cancelar:hover {
+background-color: #cc0000;
+}
+
+/* Ajuste para que la tabla sea responsiva si hay muchas columnas */
+.dashboard-main-content {
+overflow-x: auto;
+}

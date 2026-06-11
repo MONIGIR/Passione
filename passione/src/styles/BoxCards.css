@@ -66,3 +66,15 @@ border-left-color: #dc3545;
 .infoCarta.danger .CartaIcon {
 color: #dc3545;
 }
+
+.ContenedorAcciones{
+    background-color: #1f4232;
+}
+
+.btn-agregar{
+    margin: 0.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: #d3d3d3 0.2s;
+}
