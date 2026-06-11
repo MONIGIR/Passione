@@ -4,7 +4,7 @@ import BarraLateral from './barraLateral';
 
 //ICONS
 import IconInventario from '../assets/book-open-text.svg';
-import IconOrdenes from '../assets/book-open-text.svg';
+import IconOrdenes from '../assets/package.svg';
 import IconInicio from '../assets/house.svg';
 import IconCerrarSesion from '../assets/power.svg';
 import IconUsuario from '../assets/user.svg';
