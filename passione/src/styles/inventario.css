@@ -1,0 +1,117 @@
+/* --- CONTROLES SUPERIORES (BOTONES VERDES) --- */
+.inventario-controles-superiores {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.btn-control-verde {
+    background-color: #21593d; /* Verde oscuro idéntico a la imagen */
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 25px; /* Hace los botones completamente ovalados */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s;
+}
+
+.btn-control-verde:hover {
+    background-color: #163d29;
+}
+
+.flecha-dropdown {
+    font-size: 10px;
+    transition: transform 0.2s;
+}
+
+/* --- CONTENEDOR GRIS DE LA TABLA --- */
+.contenedor-tabla-imagen {
+    background-color: #dbdbdb; /* El fondo gris uniforme inferior de la captura */
+    border-radius: 4px;
+    padding-bottom: 120px; /* Espacio gris vacío abajo según tu imagen */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border-color: #000000;
+
+}
+
+.tabla-estilo-imagen {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: transparent; /* Permite ver el fondo gris de su contenedor */
+}
+
+/* Cabeceras de columna */
+.tabla-estilo-imagen thead th {
+    font-size: 16px;
+    color: #000000;
+    font-weight: 600;
+    padding: 14px 10px;
+    border-bottom: 2px solid #555555; /* Línea divisoria de cabecera */
+    background-color: #d1d1d1; /* Un tono ligeramente más oscuro arriba */
+}
+
+/* Filas de la tabla */
+.tabla-estilo-imagen tbody tr {
+    border-bottom: 1px solid #999999; /* Líneas delgadas entre artículos */
+}
+
+.tabla-estilo-imagen tbody td {
+    padding: 14px 10px;
+    color: #000000;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* --- ALINEACIÓN Y FORMATOS ESPECÍFICOS DE COLUMNAS --- */
+.col-id {
+    text-align: center;
+    width: 60px;
+}
+
+.col-name {
+    text-align: center;
+    font-weight: 600 !important;
+}
+
+.col-categoria {
+    text-align: center;
+    color: #222;
+}
+
+.col-precio {
+    text-align: center;
+    font-weight: 600 !important;
+}
+
+.col-unidades {
+    text-align: center;
+}
+
+/* Asegurar coherencia en el comportamiento responsivo del layout general */
+.formulario-seccion {
+    flex: 0 0 350px;
+}
+
+.tabla-seccion {
+    flex: 1;
+}
+.btn-add-product{
+    background-color:#21593d;
+    color:white;
+    border: none;
+        padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 25px; /* Hace los botones completamente ovalados */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s;
+}

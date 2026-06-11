@@ -4,11 +4,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem 0; /* Un poco menos de padding arriba para no empujar el texto */
+  padding: 1rem 0;/* Un poco menos de padding arriba para no empujar el texto */
   gap: 2rem; /* Reduce el espacio muerto entre el texto y los iconos */
-
   min-height: 100vh; 
   box-sizing: border-box;
+
 }
 
 .TextoLateral {
@@ -17,12 +17,13 @@
   align-items: center;
   color: #ffffff;
   font-weight: 500;
+  font-size: 40px;
   letter-spacing: 0px;
-  margin-bottom: 0.5rem;
+  margin-bottom:auto;
 }
 
 .sidebarChar {
-  font-size: 0.85rem; 
+  font-size: 1.5rem; 
   line-height: 1.3;
   font-family: monospace, sans-serif;
 }
@@ -30,9 +31,10 @@
 .IconosLateral {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem; 
+  gap: 1rem; 
   width: 100%;
   align-items: center;
+
 }
 
 .sidebar-link {
