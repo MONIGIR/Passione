@@ -67,16 +67,6 @@ export const LoginRegister = () => {
                     </div>
                     {!IsLogIn && (
                         <div className='formulario'>
-                            <label htmlFor='role'>Tipo de Usuario</label>
-                            <select
-                                id='role'
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                                className='selector-formulario'
-                            >
-                                <option value='usuario'>Usuario</option>
-                                <option value='administrador'>Administrador</option>
-                            </select>
                         </div>
                     )}
                     <button type='submit' className='btn-submit'>
