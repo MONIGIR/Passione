@@ -1,23 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import '../styles/AdminUser.css';
-import BarraLateral from './barraLateral';
-
 // ICONS
-import IconInventario from '../assets/book-open-text.svg';
-import IconOrdenes from '../assets/package.svg';
-import IconInicio from '../assets/house.svg';
-import IconCerrarSesion from '../assets/power.svg';
-import IconUsuario from '../assets/user.svg';
-
 const GestionUsuarios = ({ setVistaActual, onLogout }) => {
-const Botones = [
-    { imagen: IconInicio, texto: 'Inicio', accion: () => setVistaActual('inicio') },
-    { imagen: IconUsuario, texto: 'Usuarios', accion: () => setVistaActual('usuarios') },
-    { imagen: IconInventario, texto: 'Inventario', accion: () => setVistaActual('inventario') },
-    { imagen: IconOrdenes, texto: 'Ordenes', accion: () => setVistaActual('ordenes') },
-    { imagen: IconCerrarSesion, texto: 'Cerrar sesion', accion: onLogout },
-];
-
 const [formData, setFormData] = useState({
     userName: '',
     userEmail: '',
@@ -68,8 +52,6 @@ const handleBorrar = (id) => {
 };
 
 return (
-    <div className="layout-general">
-    <BarraLateral botones={Botones} />
     <div className="dashboard-main-content">
         <div className="gestion-usuarios-container">
         <div className="formulario-seccion">
@@ -183,7 +165,6 @@ return (
             </div>
         </div>
         </div>
-    </div>
     </div>
 );
 };

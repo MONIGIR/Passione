@@ -1,24 +1,12 @@
 import { useState, useEffect } from 'react';
-import BarraLateral from '../modulos-jsx/barraLateral';
+
 import '../styles/inventario.css';
 
 // Tus iconos de la barra lateral...
-import IconUsuario from '../assets/user.svg';
-import IconInicio from '../assets/house.svg';
-import IconInventario from '../assets/book-open-text.svg';
-import IconConfig from '../assets/wrench.svg';
-import IconOrdenes from '../assets/book-open-text.svg';
-import IconCerrarSesion from '../assets/power.svg';
+
 
 const GestionInventario = ({ setVistaActual, onLogout }) => {
-const Botones = [
-    { imagen: IconInicio, texto: "Inicio", accion: () => setVistaActual('inicio') },
-    { imagen: IconUsuario, texto: "Usuarios", accion: () => setVistaActual('usuarios') },
-    { imagen: IconInventario, texto: "Inventario", accion: () => setVistaActual('inventario') },
-    { imagen: IconConfig, texto: "Configuracion", accion: () => alert('Configuración') },
-    { imagen: IconOrdenes, texto: "Ordenes", accion: () => setVistaActual('ordenes') },
-    { imagen: IconCerrarSesion, texto: "Cerrar sesion", accion: onLogout },
-];
+
 
 const [formData, setFormData] = useState({
     nombreProducto: '',
@@ -67,8 +55,6 @@ const handleSubmit = (e) => {
 
 return (
     <div className="dashboard-layout">
-    <BarraLateral botones={Botones} />
-
     <div className="dashboard-main-content">
         <div className="inventario-content-layout">
         

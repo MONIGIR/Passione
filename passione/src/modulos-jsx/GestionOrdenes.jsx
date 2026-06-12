@@ -1,21 +1,10 @@
 import { useState, useEffect } from 'react';
-import BarraLateral from '../modulos-jsx/barraLateral';
 import '../styles/GestionOrdenes.css';
-import IconInventario from '../assets/book-open-text.svg';
-import IconInicio from '../assets/house.svg';
-import IconUsuario from '../assets/user.svg';
-import IconOrders from '../assets/package.svg';
-import IconLogout from '../assets/power.svg';
+
 
 const GestionOrdenes = ({ setVistaActual, onLogout }) => {
   // Configuración de botones para la Barra Lateral según tu imagen
-const Botones = [
-    { imagen: IconInicio, texto: "INICIO", accion: () => setVistaActual('inicio') },
-    { imagen: IconUsuario, texto: "USERS", accion: () => setVistaActual('usuarios') },
-    { imagen: IconInventario, texto: "Inventario", accion: () => setVistaActual('inventario') },
-    { imagen: IconOrders, texto: "ORDERS", accion: () => setVistaActual('ordenes') },
-    { imagen: IconLogout, texto: "LOGOUT", accion: onLogout },
-];
+
 
   // Estado para las órdenes (conectado a Postgres en el futuro)
 const [ordenes, setOrdenes] = useState([]);
@@ -40,10 +29,7 @@ const cancelarOrden = (id) => {
 
 return (
     <div className="dashboard-layout">
-      {/* Implementación de la Barra Lateral */}
-    <BarraLateral botones={Botones} />
 
-      {/* Contenido Principal */}
     <div className="dashboard-main-content">
         <div className="ordenes-view-container">
         
