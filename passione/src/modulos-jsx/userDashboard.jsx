@@ -1,7 +1,12 @@
-import React, { useState } from 'react'; // Importamos useState para manejar el carrito
+import { useState } from 'react'; // Importamos useState para manejar el carrito
 import '../styles/user.css';
-import BarraLateral from './barraLateral'; 
+import Carrito from './carrito';
 
+
+
+
+
+import BarraLateral from './barraLateral'; 
 import IconoUsuario from '../assets/user.svg';
 import IconoCarrito from '../assets/shopping-cart.svg';
 import IconoCerrar from '../assets/power.svg';
@@ -44,22 +49,27 @@ const App = () => {
         id: `rolex-${index}` // Genera id: rolex-0, rolex-1, etc.
     }));
 
-    // 4. Función que maneja la lógica de agregar al carrito
-    const handleAgregarAlCarrito = (producto) => {
-        setCarrito((carritoActual) => {
-            // Opcional: Verificar si ya existe en el carrito para aumentar cantidad
+
+    const handleAgregarAlCarrito = (producto) =>{
+        setCarrito((carritoActual)=>{
             const existe = carritoActual.find(item => item.id === producto.id);
-            if (existe) {
-                return carritoActual.map(item => 
-                    item.id === producto.id ? { ...item, cantidad: (item.cantidad || 1) + 1 } : item
+            if (existe){
+                return carritoActual.map(item=>
+                    item.id === producto.id ? {...item, cantidad: item.cantidad + 1} : item
                 );
             }
-            // Si es nuevo, lo agregamos con cantidad inicial de 1
-            return [...carritoActual, { ...producto, cantidad: 1 }];
+        return [...carritoActual, { ...producto, cantidad: 1}];
         });
+    };
 
-        // Consola temporal para que verifiques que funciona
-        console.log(`Producto añadido: ${producto.title} (${producto.id})`);
+    const handleEliminarDelCarrito = (id) => {
+        setCarrito((carritoActual)=>
+            carritoActual.filter(item => item.id !==id)
+        );
+    };
+
+    const handleLimpiarCarrito = () => {
+        setCarrito([]);
     };
 
     const Botones = [
@@ -94,6 +104,13 @@ const App = () => {
                     />
                 ))}
             </main>
+                <aside className="SeccionCarrito">
+                    <carrito
+                        items={carrito}
+                        onEliminar ={handleEliminarDelCarrito}
+                        onLimpiarCarrito ={handleLimpiarCarrito}
+                    />
+                </aside>
         </div>
     );
 };
