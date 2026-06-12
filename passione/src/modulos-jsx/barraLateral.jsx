@@ -10,13 +10,24 @@ const BarraLateral = ({ botones = [] }) => {
             </div>
             <nav className="IconosLateral">
                 {botones.map((boton, index) => (
-                    <a key={index} href={boton.enlace || "#"} title={boton.texto} className="sidebar-link">
-                        <img 
-                            src={boton.imagen} 
-                            alt={boton.texto} 
-                            className="sidebar-icon" 
-                        />
-                    </a>
+                    <button 
+                        key={index} 
+                        onClick={boton.accion} 
+                        title={boton.texto} 
+                        className="sidebar-link"
+                        style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                    >
+                        <div className="sidebar-icon-wrapper">
+                            <img 
+                                src={boton.imagen} 
+                                alt={boton.texto} 
+                                className="sidebar-icon" 
+                            />
+                            {boton.count > 0 && (
+                                <span className="sidebar-badge">{boton.count}</span>
+                            )}
+                        </div>
+                    </button>
                 ))}
             </nav>
         </aside>

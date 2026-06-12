@@ -1,26 +1,32 @@
 import { useState } from 'react';
 import '../styles/login.css';
-//Crea un css y lo importas aqui.
-export const LoginRegister = () => {
+
+export const LoginRegister = ({ onLogin }) => {
     const [IsLogIn, setIsLogin] = useState(true);
 
-    //Capturador de credenciales
+    // Capturador de credenciales
     const [Email, setEmail] = useState('');
     const [Contraseña, setContraseña] = useState('');
     const [role, setRole] = useState('usuario');
     const [Nombre, setNombre] = useState('');
 
-    //Manejador de envio de formulario
+    // Manejador de envío de formulario
     const handleSubmit = (e) => {
         e.preventDefault();
         if (IsLogIn) {
-            console.log('Inicia sesion con :', { Email, Contraseña });
+            // Validación simulada: Si incluye "admin" en el correo, entra al panel de Admin
+            const determinadoRole = Email.toLowerCase().includes('admin') ? 'admin' : 'usuario';
+            
+            if (onLogin) {
+                onLogin({ email: Email, role: determinadoRole });
+            }
         } else {
             console.log('Registrar usuario', { Nombre, Email, Contraseña, role });
+            alert('¡Usuario registrado con éxito! Ahora puedes iniciar sesión.');
+            setIsLogin(true); // Cambiar a inicio de sesión tras registrarse
         }
     };
 
-    //Renderizado condicional del formulario
     return (
         <div className='Container-Autorizacion'>
             <div className='Carta-autorizacion'>
@@ -65,10 +71,6 @@ export const LoginRegister = () => {
                             required
                         />
                     </div>
-                    {!IsLogIn && (
-                        <div className='formulario'>
-                        </div>
-                    )}
                     <button type='submit' className='btn-submit'>
                         {IsLogIn ? 'Ingresar' : 'Registrarse'}
                     </button>

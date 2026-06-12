@@ -1,11 +1,49 @@
 .ContenedorCarrito {
+    alignment-baseline: central;
     background-color: #f9f9f9;
-    border-left: 1px solid #ddd;
+    border-radius: 12px;
     padding: 20px;
-    width: 320px;
-    height: 100vh;
-    position: sticky;
-    top: 0;
+    width: 100%;
+    min-width: 320px;
+    max-width: 420px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.PopupOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 999;
+}
+
+.PopUpCarrito {
+    position: fixed;
+    align-items: stretch;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: min(420px, calc(100vw - 40px));
+    padding: 20px;
+}
+
+.CerrarPopUpCarrito {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
 }
 
 .ItemCarrito {

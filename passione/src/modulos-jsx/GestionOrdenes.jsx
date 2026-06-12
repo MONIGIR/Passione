@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react';
 import BarraLateral from '../modulos-jsx/barraLateral';
 import '../styles/GestionOrdenes.css';
-
-
 import IconInventario from '../assets/book-open-text.svg';
 import IconInicio from '../assets/house.svg';
 import IconUsuario from '../assets/user.svg';
 import IconOrders from '../assets/package.svg';
 import IconLogout from '../assets/power.svg';
 
-const GestionOrdenes = () => {
+const GestionOrdenes = ({ setVistaActual, onLogout }) => {
   // Configuración de botones para la Barra Lateral según tu imagen
 const Botones = [
-    { imagen: IconInicio, texto: "INICIO", enlace: '#' },
-    { imagen: IconUsuario, texto: "USERS", enlace: '#' },
-    { imagen: IconInventario, texto: "Inventario", enlace: '#' },
-    { imagen: IconOrders, texto: "ORDERS", enlace: '#' },
-    { imagen: IconLogout, texto: "LOGOUT", enlace: '#' },
+    { imagen: IconInicio, texto: "INICIO", accion: () => setVistaActual('inicio') },
+    { imagen: IconUsuario, texto: "USERS", accion: () => setVistaActual('usuarios') },
+    { imagen: IconInventario, texto: "Inventario", accion: () => setVistaActual('inventario') },
+    { imagen: IconOrders, texto: "ORDERS", accion: () => setVistaActual('ordenes') },
+    { imagen: IconLogout, texto: "LOGOUT", accion: onLogout },
 ];
 
   // Estado para las órdenes (conectado a Postgres en el futuro)
@@ -24,7 +22,6 @@ const [ordenes, setOrdenes] = useState([]);
 
   // 1. OBTENER ÓRDENES (Simulación GET de Postgres)
 useEffect(() => {
-    // Aquí iría tu fetch: fetch('/api/ordenes').then(res => res.json()).then(data => setOrdenes(data))
     const datosSimulados = [
     { id: 1, nombre: 'Alan Brito', direccion: 'Av. Siempre Viva 123', producto: 'Monitor Gamer', categoria: 'Hardware', cantidad: 1, total: 4500, fecha: '2023-10-24' },
     { id: 2, nombre: 'Elena Nito', direccion: 'Calle Falsa 456', producto: 'Teclado Mecánico', categoria: 'Periféricos', cantidad: 2, total: 2400, fecha: '2023-10-25' },

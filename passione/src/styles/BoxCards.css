@@ -78,3 +78,6 @@ color: #dc3545;
     cursor: pointer;
     transition: #d3d3d3 0.2s;
 }
+.CartaAcciones {
+display: none;
+}

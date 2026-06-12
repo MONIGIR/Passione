@@ -10,14 +10,14 @@ import IconConfig from '../assets/wrench.svg';
 import IconOrdenes from '../assets/book-open-text.svg';
 import IconCerrarSesion from '../assets/power.svg';
 
-const GestionInventario = () => {
+const GestionInventario = ({ setVistaActual, onLogout }) => {
 const Botones = [
-    { imagen: IconInicio, texto: "Inicio", enlace: '#' },
-    { imagen: IconUsuario, texto: "Usuarios", enlace: '#' },
-    { imagen: IconInventario, texto: "Inventario", enlace: '#' },
-    { imagen: IconConfig, texto: "Configuracion", enlace: '#' },
-    { imagen: IconOrdenes, texto: "Ordenes", enlace: '#' },
-    { imagen: IconCerrarSesion, texto: "Cerrar sesion", enlace: '#' },
+    { imagen: IconInicio, texto: "Inicio", accion: () => setVistaActual('inicio') },
+    { imagen: IconUsuario, texto: "Usuarios", accion: () => setVistaActual('usuarios') },
+    { imagen: IconInventario, texto: "Inventario", accion: () => setVistaActual('inventario') },
+    { imagen: IconConfig, texto: "Configuracion", accion: () => alert('Configuración') },
+    { imagen: IconOrdenes, texto: "Ordenes", accion: () => setVistaActual('ordenes') },
+    { imagen: IconCerrarSesion, texto: "Cerrar sesion", accion: onLogout },
 ];
 
 const [formData, setFormData] = useState({
@@ -72,7 +72,6 @@ return (
     <div className="dashboard-main-content">
         <div className="inventario-content-layout">
         
-          {/* COLUMNA IZQUIERDA: Formulario (Mantiene tu estética de marca) */}
         <div className="formulario-seccion">
             <div className="card-formulario-inventario">
             <h2 className="titulo-formulario">Agregar nuevo Producto</h2>
