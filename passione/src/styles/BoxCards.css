@@ -1,83 +1,69 @@
 .infoCarta {
-background: #ffffff;
-border-radius: 8px;
-padding: 1.5rem;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-border-left: 5px solid #6c757d;
-transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.4rem 1.6rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border-left: 4px solid #6c757d;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: fadeInUp 0.5s ease both;
 }
 
+.infoCarta:nth-child(1) { animation-delay: 0.05s; }
+.infoCarta:nth-child(2) { animation-delay: 0.12s; }
+.infoCarta:nth-child(3) { animation-delay: 0.19s; }
+.infoCarta:nth-child(4) { animation-delay: 0.26s; }
+
 .infoCarta:hover {
-transform: translateY(-3px);
-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
 
 .CartaPrincipal {
-display: flex;
-justify-content: space-between;
-align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .CartaInformacion {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
-.Cartatitulo {
-font-size: 0.875rem;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-color: #6c757d;
-font-weight: 600;
-margin-bottom: 0.5rem;
+.CartaTitulo {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8a8fa3;
+  font-weight: 600;
 }
 
 .CartaValor {
-font-size: 1.75rem;
-font-weight: 700;
-color: #212529;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1d2e;
+  line-height: 1;
 }
 
-/* Modificadores de estilo según el tipo de tarjeta */
-.infoCarta.primary {
-border-left-color: #0d6efd;
-}
-.infoCarta.primary .CartaIcon {
-color: #0d6efd;
+.CartaIconBox {
+  font-size: 2rem;
+  opacity: 0.18;
+  user-select: none;
 }
 
-.infoCarta.success {
-border-left-color: #198754;
-}
-.infoCarta.success .CartaIcon {
-color: #198754;
-}
+/* Colores por tipo */
+.infoCarta.primary  { border-left-color: #4f80ff; }
+.infoCarta.success  { border-left-color: #2ecc71; }
+.infoCarta.warning  { border-left-color: #f39c12; }
+.infoCarta.danger   { border-left-color: #e74c3c; }
 
-.infoCarta.warning {
-border-left-color: #ffc107;
-}
-.infoCarta.warning .CartaIcon {
-color: #ffc107;
-}
+.infoCarta.primary  .CartaValor { color: #2c4ecf; }
+.infoCarta.success  .CartaValor { color: #1a9950; }
+.infoCarta.warning  .CartaValor { color: #c07800; }
+.infoCarta.danger   .CartaValor { color: #c0392b; }
 
-.infoCarta.danger {
-border-left-color: #dc3545;
-}
-.infoCarta.danger .CartaIcon {
-color: #dc3545;
-}
-
-.ContenedorAcciones{
-    background-color: #1f4232;
-}
-
-.btn-agregar{
-    margin: 0.5rem;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: #d3d3d3 0.2s;
-}
-.CartaAcciones {
-display: none;
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

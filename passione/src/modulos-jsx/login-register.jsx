@@ -1,91 +1,107 @@
-import { useState } from 'react';
-import '../styles/login.css';
+import { useState } from "react";
+import { loginApi, registroApi } from "../services/authService.js";
+import "../styles/login.css";
 
 export const LoginRegister = ({ onLogin }) => {
-    const [IsLogIn, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-    // Capturador de credenciales
-    const [Email, setEmail] = useState('');
-    const [Contraseña, setContraseña] = useState('');
-    const [role, setRole] = useState('usuario');
-    const [Nombre, setNombre] = useState('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setCargando(true);
 
-    // Manejador de envío de formulario
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (IsLogIn) {
-            // Validación simulada: Si incluye "admin" en el correo, entra al panel de Admin
-            const determinadoRole = Email.toLowerCase().includes('admin') ? 'admin' : 'usuario';
-            
-            if (onLogin) {
-                onLogin({ email: Email, role: determinadoRole });
-            }
-        } else {
-            console.log('Registrar usuario', { Nombre, Email, Contraseña, role });
-            alert('¡Usuario registrado con éxito! Ahora puedes iniciar sesión.');
-            setIsLogin(true); // Cambiar a inicio de sesión tras registrarse
-        }
-    };
+    try {
+      if (isLogin) {
+        const usuario = await loginApi(email, password);
+        onLogin(usuario);
+      } else {
+        const usuario = await registroApi(nombre, email, password);
+        onLogin(usuario);
+      }
+    } catch (err) {
+      setError(err.response?.data?.mensaje || "Error de conexión con el servidor");
+    } finally {
+      setCargando(false);
+    }
+  };
 
-    return (
-        <div className='Container-Autorizacion'>
-            <div className='Carta-autorizacion'>
-                <h2>{IsLogIn ? 'Iniciar Sesion' : 'Crear Cuenta'}</h2>
-                <p className='autorizar-sub'>
-                    {IsLogIn ? 'Bienvenido' : 'Registrate para entrar'}
-                </p>
-                
-                <form onSubmit={handleSubmit} className='autorizar-formulario'>
-                    {!IsLogIn && (
-                        <div className='formulario'>
-                            <label htmlFor='nombre'>Nombre Completo</label>
-                            <input
-                                type='text'
-                                id='nombre'
-                                value={Nombre}
-                                onChange={(e) => setNombre(e.target.value)}
-                                placeholder='Nombre'
-                                required
-                            />
-                        </div>
-                    )}
-                    <div className='formulario'>
-                        <label htmlFor='Email'>Correo Electronico</label>
-                        <input
-                            type='email'
-                            id='Email'
-                            value={Email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder='correo@ejemplo.com'
-                            required
-                        />
-                    </div>
-                    <div className='formulario'>
-                        <label htmlFor='Contraseña'>Contraseña</label>
-                        <input
-                            type='password'
-                            id='Contraseña'
-                            value={Contraseña}
-                            onChange={(e) => setContraseña(e.target.value)}
-                            placeholder='......'
-                            required
-                        />
-                    </div>
-                    <button type='submit' className='btn-submit'>
-                        {IsLogIn ? 'Ingresar' : 'Registrarse'}
-                    </button>
-                </form>
-                <div className='autorizar-alternar'>
-                    <p>
-                        <button type='button' onClick={() => setIsLogin(!IsLogIn)} className='btn-alternar'>
-                            {IsLogIn ? 'Registrate Aqui' : 'Inicia sesion'}
-                        </button>
-                    </p>
-                </div>
+  return (
+    <div className="Container-Autorizacion">
+      <div className="Carta-autorizacion">
+        <h2>{isLogin ? "Iniciar Sesión" : "Crear Cuenta"}</h2>
+        <p className="autorizar-sub">
+          {isLogin ? "Bienvenido de vuelta" : "Regístrate para entrar"}
+        </p>
+
+        {error && (
+          <p style={{ color: "red", marginBottom: "1rem", fontSize: "0.9rem" }}>
+            {error}
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit} className="autorizar-formulario">
+          {!isLogin && (
+            <div className="formulario">
+              <label htmlFor="nombre">Nombre Completo</label>
+              <input
+                type="text"
+                id="nombre"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                placeholder="Tu nombre"
+                required
+              />
             </div>
+          )}
+          <div className="formulario">
+            <label htmlFor="email">Correo Electrónico</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="correo@ejemplo.com"
+              required
+            />
+          </div>
+          <div className="formulario">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Mínimo 8 caracteres"
+              required
+            />
+          </div>
+          <button type="submit" className="btn-submit" disabled={cargando}>
+            {cargando ? "Cargando..." : isLogin ? "Ingresar" : "Registrarse"}
+          </button>
+        </form>
+
+        <div className="autorizar-alternar">
+          <p>
+            <button
+              type="button"
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setError("");
+              }}
+              className="btn-alternar"
+            >
+              {isLogin ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
+            </button>
+          </p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default LoginRegister;
-

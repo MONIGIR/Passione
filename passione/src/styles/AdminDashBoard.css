@@ -1,61 +1,181 @@
-/* Configuración del diseño base dividiendo la pantalla */
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #f0f2f7;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
 }
 
-/* Contenido de la derecha que se expande automáticamente */
 .dashboard-main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 2rem 2.4rem;
   box-sizing: border-box;
+  animation: fadeIn 0.35s ease;
+  overflow-y: auto;
 }
 
+/* ── HEADER ─────────────────────────────────────── */
 .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
 }
 
 .dashboard-header h1 {
   margin: 0;
-  font-size: 2rem;
-  color: #212529;
+  font-size: 1.75rem;
+  color: #1a1d2e;
+  font-weight: 700;
 }
 
 .dashboard-header p {
-  margin: 0.5rem 0 0 0;
-  color: #6c757d;
+  margin: 0.3rem 0 0;
+  color: #8a8fa3;
+  font-size: 0.9rem;
 }
 
-/* Grid responsivo para las cajas de información */
+.header-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #eafaf1;
+  color: #1a9950;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #abebc6;
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #2ecc71;
+  animation: pulse 2s infinite;
+}
+
+/* ── METRICS GRID ───────────────────────────────── */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
   margin-bottom: 2rem;
 }
 
+/* Skeleton cards mientras carga */
+.skeleton-card {
+  height: 100px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #e8eaf0 25%, #f5f6fa 50%, #e8eaf0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ── DETAILED SECTION ───────────────────────────── */
 .detailed-section {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .detailed-section { grid-template-columns: 1fr; }
 }
 
 .large-module {
   background: #ffffff;
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e9ecef;
-  min-height: 200px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e8eaef;
+  animation: fadeInUp 0.45s ease both;
 }
 
-/* Esto remueve los espacios por defecto que mete el navegador */
-html, body {
+.large-module h3 {
+  margin: 0 0 1.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1d2e;
+}
+
+/* ── QUICK ACTIONS ──────────────────────────────── */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.qa-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f5f6fa;
+  border: 1px solid #e8eaef;
+  border-radius: 8px;
+  padding: 0.85rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3a3d4e;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  text-align: left;
+}
+
+.qa-btn:hover {
+  background: #173325;
+  color: #fff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(23,51,37,0.18);
+}
+
+.qa-btn span { font-size: 1.1rem; }
+
+/* ── INFO LIST ──────────────────────────────────── */
+.info-list {
+  list-style: none;
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.info-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  color: #4a4e68;
+}
+
+.dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot.green  { background: #2ecc71; }
+.dot.yellow { background: #f39c12; }
+.dot.red    { background: #e74c3c; }
+
+/* ── ANIMACIONES ────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

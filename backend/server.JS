@@ -1,56 +1,52 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import productoRoutes from "./routes/productoRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
 
-// ──── Cargar variables de entorno ─────────────
 dotenv.config();
-
-// ──── Conectar a MongoDB ──────────────────────
 connectDB();
 
-// ──── Crear aplicación Express ────────────────
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ──── Middlewares globales ────────────────────
-app.use(cors());                    // Permitir peticiones del frontend
-app.use(express.json());            // Parsear JSON en el body
-app.use(express.urlencoded({ extended: true })); // Parsear form data
+const corsOrigin =
+  process.env.NODE_ENV === "development"
+    ? (origin, cb) => cb(null, true) // En dev acepta cualquier origen (incluyendo cualquier puerto de Vite)
+    : process.env.CLIENT_URL;        // En producción, solo el dominio configurado
+
+app.use(cors({ origin: corsOrigin, credentials: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));           // Log de peticiones solo en desarrollo
+  app.use(morgan("dev"));
 }
 
-// ──── Ruta de bienvenida ──────────────────────
 app.get("/", (req, res) => {
   res.json({
-    mensaje: "🚀 API de Inventario MERN",
-    version: "1.0.0",
+    mensaje: "API Passione E-Commerce",
+    version: "2.0.0",
     endpoints: {
+      auth: "/api/auth",
       productos: "/api/productos",
-      stockBajo: "/api/productos/reportes/stock-bajo",
-      resumen: "/api/productos/reportes/resumen",
     },
   });
 });
 
-// ──── Rutas de la API ─────────────────────────
+app.use("/api/auth", authRoutes);
+app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/productos", productoRoutes);
 
-// ──── Manejo de errores (siempre al final) ────
 app.use(notFound);
 app.use(errorHandler);
 
-// ──── Iniciar servidor ────────────────────────
 app.listen(PORT, () => {
-  console.log(`
-  ╔══════════════════════════════════════════╗
-  ║  🖥️  Servidor corriendo en puerto ${PORT}     ║
-  ║  📍 http://localhost:${PORT}              ║
-  ║  🌍 Entorno: ${process.env.NODE_ENV}            ║
-  ╚══════════════════════════════════════════╝
-  `);
+  console.log(`Servidor en http://localhost:${PORT} [${process.env.NODE_ENV}]`);
 });
