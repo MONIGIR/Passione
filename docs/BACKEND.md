@@ -1435,6 +1435,70 @@ Cliente                          Express                    MongoDB
 
 ## 12. Casos Límite y Riesgos Detectados
 
+> **Actualización 2026-06-13:** Verificación con git confirma exposiciones reales
+> (no hipotéticas) y se añaden hallazgos que la revisión previa omitió. El código
+> fuente del backend fue anotado con JSDoc de nivel producción en esta misma rama.
+
+### Riesgo 0a — `server.JS` no arranca en Linux (CRÍTICO / BLOQUEANTE)
+
+**Archivo:** `backend/server.JS` vs `backend/package.json`
+**Descripción:** El archivo de entrada se llama `server.JS` (extensión en
+mayúsculas), pero los scripts npm ejecutan `node server.js` (minúsculas). En
+sistemas de archivos **case-sensitive** (Linux, la mayoría de contenedores
+Docker y CI) `npm start` y `npm run dev` fallan con `Cannot find module
+'.../server.js'`. Probablemente "funciona" sólo porque se desarrolla en
+Windows/macOS (case-insensitive).
+**Corrección:** Renombrar el archivo a `server.js` en minúsculas:
+```bash
+git mv backend/server.JS backend/server.js
+```
+
+---
+
+### Riesgo 0b — `.env` versionado con credenciales reales (CRÍTICO / CONFIRMADO)
+
+**Archivo:** `backend/.env`
+**Descripción:** `git ls-files` confirma que `backend/.env` **está rastreado por
+git** y forma parte del historial del repositorio. Contiene credenciales reales
+de MongoDB Atlas (`mongodb+srv://nigga:nigga@passione.xnsqyzd.mongodb.net/...`)
+y el `JWT_SECRET`. No existe ningún `.gitignore` en el repo. Cualquiera con
+acceso al repositorio (o a su historial, aunque luego se borre el archivo) tiene
+acceso completo a la base de datos y puede firmar JWTs arbitrarios.
+**Corrección (urgente):**
+1. **Rotar de inmediato** las credenciales del cluster de Atlas y el `JWT_SECRET`.
+2. Crear `.gitignore` con `.env` y `node_modules/`.
+3. Eliminar `.env` del seguimiento: `git rm --cached backend/.env`.
+4. Considerar purgar el historial (`git filter-repo` / BFG) dado que el secreto
+   ya quedó registrado en commits anteriores.
+
+---
+
+### Riesgo 0c — Sin validación de tipos en checkout: `cantidad` negativa e inyección NoSQL (ALTO)
+
+**Archivo:** `controllers/ordenController.js` (`crearOrden`)
+**Descripción:** `req.body.items` se consume sin validar tipos:
+- Una `cantidad` **negativa** hace que la condición `{ stock: { $gte: cantidad } }`
+  siempre se cumpla y que `$inc: { stock: -cantidad }` **incremente** el stock,
+  generando además `subtotal` y `total` negativos en la orden persistida.
+- `productoId` no se valida como string/ObjectId; un objeto inyectado podría
+  alterar el `$in` o el `findOneAndUpdate` (inyección NoSQL).
+**Corrección:** Validar cada ítem con express-validator o manualmente:
+`productoId` ObjectId válido y `cantidad` entero `>= 1` antes de tocar la DB.
+
+---
+
+### Riesgo 0d — Faltan rate limiting y cabeceras de seguridad (MEDIO)
+
+**Archivo:** `backend/server.JS`
+**Descripción:** No hay `express-rate-limit` en `/login` y `/registro`
+(brute-force / credential stuffing sin freno), ni `helmet` para cabeceras HTTP
+de seguridad (HSTS, X-Content-Type-Options, etc.). Tampoco hay límite explícito
+de tamaño de payload distinto al default de `express.json`.
+**Corrección:** Añadir `helmet()` global y un `rateLimit` específico para las
+rutas de autenticación.
+
+---
+
 ### Riesgo 1 — JWT_SECRET en texto plano (CRÍTICO)
 
 **Archivo:** `.env`  

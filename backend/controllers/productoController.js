@@ -1,10 +1,29 @@
 import Producto from "../models/Producto.js";
 
-// ──────────────────────────────────────────────
-// @desc    Obtener todos los productos (con filtros opcionales)
-// @route   GET /api/productos
-// @query   ?buscar=laptop&categoria=Electrónica&activo=true&ordenar=precio&pagina=1&limite=10
-// ──────────────────────────────────────────────
+/**
+ * Lista productos con filtros opcionales, paginación y ordenamiento.
+ *
+ * @route   GET /api/productos
+ * @access  Público
+ * @async
+ * @param {import("express").Request} req
+ * @param {Object} req.query
+ * @param {string} [req.query.buscar]    Texto a buscar en nombre/sku/proveedor (regex, case-insensitive).
+ * @param {string} [req.query.categoria] Filtro exacto por categoría.
+ * @param {string} [req.query.activo]    `"true"|"false"`; se convierte a boolean.
+ * @param {string} [req.query.enOferta]  `"true"|"false"`; se convierte a boolean.
+ * @param {string} [req.query.ordenar="-createdAt"] Campo de orden Mongoose (p.ej. `"precio"`, `"-precio"`).
+ * @param {string} [req.query.pagina="1"]  Número de página (1-based).
+ * @param {string} [req.query.limite="20"] Tamaño de página.
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, conteo:number, total:number,
+ *   paginas:number, paginaActual:number, datos:ProductoDoc[] }`.
+ * @throws {Error} Errores de DB → 500.
+ *
+ * [SEGURIDAD] `buscar` se pasa sin escapar a `$regex`: patrón malicioso puede
+ * provocar ReDoS. Conviene escapar metacaracteres antes de construir el filtro.
+ */
 export const obtenerProductos = async (req, res, next) => {
   try {
     const {
@@ -53,10 +72,20 @@ export const obtenerProductos = async (req, res, next) => {
   }
 };
 
-// ──────────────────────────────────────────────
-// @desc    Obtener un producto por ID
-// @route   GET /api/productos/:id
-// ──────────────────────────────────────────────
+/**
+ * Obtiene un producto por su ObjectId.
+ *
+ * @route   GET /api/productos/:id
+ * @access  Público
+ * @async
+ * @param {import("express").Request} req
+ * @param {Object} req.params
+ * @param {string} req.params.id  ObjectId del producto.
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, datos:ProductoDoc }`.
+ * @throws {Error} 404 si no existe; `CastError` (500) si el id no es un ObjectId válido.
+ */
 export const obtenerProductoPorId = async (req, res, next) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -72,10 +101,24 @@ export const obtenerProductoPorId = async (req, res, next) => {
   }
 };
 
-// ──────────────────────────────────────────────
-// @desc    Crear un nuevo producto
-// @route   POST /api/productos
-// ──────────────────────────────────────────────
+/**
+ * Crea un nuevo producto. Verifica unicidad de SKU antes de insertar.
+ *
+ * @route   POST /api/productos
+ * @access  Privado · Admin
+ * @async
+ * @param {import("express").Request} req
+ * @param {Object} req.body  Campos del ProductoDoc (nombre, sku, precio, stock, etc.).
+ * @param {string} req.body.sku  SKU; se compara en mayúsculas contra el catálogo.
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 201 + `{ exito:true, mensaje:string, datos:ProductoDoc }`.
+ * @throws {Error} 400 si el SKU ya existe; errores de validación del schema → 500.
+ *
+ * [SEGURIDAD] Mass assignment: `Producto.create(req.body)` inserta el body
+ * completo. Mongoose descarta campos fuera del schema, pero conviene whitelizar
+ * los campos permitidos explícitamente.
+ */
 export const crearProducto = async (req, res, next) => {
   try {
     // Verificar si el SKU ya existe
@@ -97,10 +140,24 @@ export const crearProducto = async (req, res, next) => {
   }
 };
 
-// ──────────────────────────────────────────────
-// @desc    Actualizar un producto
-// @route   PUT /api/productos/:id
-// ──────────────────────────────────────────────
+/**
+ * Actualiza un producto por id, ejecutando las validaciones del schema.
+ *
+ * @route   PUT /api/productos/:id
+ * @access  Privado · Admin
+ * @async
+ * @param {import("express").Request} req
+ * @param {Object} req.params
+ * @param {string} req.params.id  ObjectId del producto.
+ * @param {Object} req.body       Campos a actualizar (parcial).
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, mensaje:string, datos:ProductoDoc }`
+ *   (documento ya actualizado por `new:true`).
+ * @throws {Error} 404 si no existe; errores de validación (`runValidators:true`) → 500.
+ *
+ * [SEGURIDAD] Mass assignment vía `req.body` sin whitelist (mismo caso que crear).
+ */
 export const actualizarProducto = async (req, res, next) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -129,10 +186,25 @@ export const actualizarProducto = async (req, res, next) => {
   }
 };
 
-// ──────────────────────────────────────────────
-// @desc    Eliminar un producto
-// @route   DELETE /api/productos/:id
-// ──────────────────────────────────────────────
+/**
+ * Elimina físicamente un producto por id.
+ *
+ * @route   DELETE /api/productos/:id
+ * @access  Privado · Admin
+ * @async
+ * @param {import("express").Request} req
+ * @param {Object} req.params
+ * @param {string} req.params.id  ObjectId del producto.
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, mensaje:string }`.
+ * @throws {Error} 404 si no existe. DB → 500.
+ *
+ * [REQUIERE CLARIFICACIÓN DE LÓGICA] Borrado físico (hard delete) pese a existir
+ * el flag `activo` para soft delete. Las órdenes referencian este producto por
+ * ObjectId; tras el borrado, ese `ref` queda colgando (los snapshots de la orden
+ * conservan los datos, pero el `populate` devolvería null).
+ */
 export const eliminarProducto = async (req, res, next) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -153,10 +225,19 @@ export const eliminarProducto = async (req, res, next) => {
   }
 };
 
-// ──────────────────────────────────────────────
-// @desc    Obtener productos con stock bajo
-// @route   GET /api/productos/reportes/stock-bajo
-// ──────────────────────────────────────────────
+/**
+ * Lista productos activos cuyo stock está en o por debajo del mínimo.
+ *
+ * @route   GET /api/productos/reportes/stock-bajo
+ * @access  Privado · Admin
+ * @async
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, conteo:number, datos:ProductoDoc[] }`
+ *   ordenados por stock ascendente.
+ * @throws {Error} Errores de DB → 500.
+ */
 export const obtenerStockBajo = async (req, res, next) => {
   try {
     const productos = await Producto.find({
@@ -174,10 +255,22 @@ export const obtenerStockBajo = async (req, res, next) => {
   }
 };
 
-// ──────────────────────────────────────────────
-// @desc    Obtener resumen/estadísticas del inventario
-// @route   GET /api/productos/reportes/resumen
-// ──────────────────────────────────────────────
+/**
+ * Resumen financiero del inventario: totales globales y desglose por categoría,
+ * calculados con pipelines de agregación de MongoDB.
+ *
+ * @route   GET /api/productos/reportes/resumen
+ * @access  Privado · Admin
+ * @async
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, datos:{
+ *   general:{ totalProductos, totalUnidades, valorInventario, precioPromedio,
+ *             stockPromedio, productosStockBajo },
+ *   porCategoria: Array<{ categoria, cantidad, unidades, valor }> } }`.
+ * @throws {Error} Errores de DB → 500.
+ */
 export const obtenerResumen = async (req, res, next) => {
   try {
     const [resumen] = await Producto.aggregate([
