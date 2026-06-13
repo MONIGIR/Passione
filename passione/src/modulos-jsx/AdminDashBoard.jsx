@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import BarraLateral from '../modulos-jsx/barraLateral';
+import BarraLateral from './barraLateral';
 import InfoCarta from './BoxCards';
 import '../styles/AdminDashBoard.css';
 import '../styles/BarraLateral.css';
