@@ -92,7 +92,44 @@ export const logout = (req, res) => {
 };
 
 // @route   GET /api/auth/me
-// Endpoint para que el frontend verifique si hay sesión activa al recargar la página
 export const getMe = async (req, res) => {
   res.json({ exito: true, datos: respuestaUsuario(req.usuario) });
+};
+
+// @route   PUT /api/auth/perfil
+// El usuario actualiza sus propios datos. Cambios sensibles requieren contraseña actual.
+export const actualizarPerfil = async (req, res, next) => {
+  try {
+    const { nombre, email, passwordActual, nuevoPassword } = req.body;
+
+    const cambioSensible = email || nuevoPassword;
+
+    if (cambioSensible) {
+      if (!passwordActual) {
+        res.status(400);
+        return next(new Error("Se requiere la contraseña actual para cambiar email o contraseña"));
+      }
+      const usuarioConPw = await Usuario.findById(req.usuario._id).select("+password");
+      const valida = await usuarioConPw.compararPassword(passwordActual);
+      if (!valida) {
+        res.status(401);
+        return next(new Error("Contraseña actual incorrecta"));
+      }
+      if (nuevoPassword && nuevoPassword.length < 8) {
+        res.status(400);
+        return next(new Error("La nueva contraseña debe tener al menos 8 caracteres"));
+      }
+    }
+
+    const usuario = await Usuario.findById(req.usuario._id);
+    if (nombre)          usuario.nombre   = nombre.trim();
+    if (email)           usuario.email    = email.toLowerCase().trim();
+    if (nuevoPassword)   usuario.password = nuevoPassword; // pre-save hook hashea
+    // Nunca actualizar role desde este endpoint
+
+    await usuario.save();
+    res.json({ exito: true, datos: respuestaUsuario(usuario) });
+  } catch (error) {
+    next(error);
+  }
 };

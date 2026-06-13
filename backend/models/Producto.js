@@ -65,10 +65,29 @@ const productoSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    imageUrl: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    enOferta: {
+      type: Boolean,
+      default: false,
+    },
+    descuento: {
+      type: Number,
+      default: 0,
+      min: [0, "El descuento no puede ser negativo"],
+      max: [100, "El descuento no puede superar 100%"],
+    },
+    descripcion: {
+      type: String,
+      default: "",
+      trim: true,
+      maxlength: [500, "La descripción no puede exceder 500 caracteres"],
+    },
   },
-  {
-    timestamps: true, // Crea automáticamente createdAt y updatedAt
-  }
+  { timestamps: true }
 );
 
 // ──── ÍNDICES ──────────────────────────────
@@ -86,6 +105,12 @@ productoSchema.virtual("stockBajo").get(function () {
 // Campo calculado: valor total en inventario
 productoSchema.virtual("valorTotal").get(function () {
   return this.precio * this.stock;
+});
+
+// Precio final aplicando descuento
+productoSchema.virtual("precioFinal").get(function () {
+  if (!this.enOferta || !this.descuento) return this.precio;
+  return parseFloat((this.precio * (1 - this.descuento / 100)).toFixed(2));
 });
 
 // Incluir virtuals en JSON y Object

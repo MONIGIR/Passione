@@ -1,56 +1,122 @@
-import 'react';
-import '../styles/Carrito.css'; 
+import { useState } from 'react';
+import { crearOrdenApi } from '../services/ordenService';
+import '../styles/Carrito.css';
 
 const Carrito = ({ items, onEliminar, onLimpiarCarrito }) => {
-    
-    const handleCompra = () => {
-        if (items.length === 0) {
-            alert("Tu carrito está vacío.");
-            return;
-        }
-        // Aquí procesarías el pago en un entorno real
-        alert("¡Compra procesada con éxito! Gracias por tu preferencia.");
-        onLimpiarCarrito(); // Vacía el carrito tras la compra
-    };
+  const [cargando, setCargando]         = useState(false);
+  const [error, setError]               = useState('');
+  const [ordenCreada, setOrdenCreada]   = useState(null);
 
+  const total = items.reduce((acc, item) => {
+    const precio = item.precioFinal ?? item.precio ?? 0;
+    return acc + precio * (item.cantidad || 1);
+  }, 0);
+
+  const handleCompra = async () => {
+    if (items.length === 0) return;
+    setError('');
+    setCargando(true);
+    try {
+      const orden = await crearOrdenApi(items);
+      setOrdenCreada(orden);
+      onLimpiarCarrito(); // vacía el carrito en el estado global
+    } catch (err) {
+      setError(err.response?.data?.mensaje || 'Error al procesar la compra. Intenta de nuevo.');
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  // ── Pantalla de éxito ──────────────────────────────────────
+  if (ordenCreada) {
     return (
-        <div className="ContenedorCarrito">
-            <h2>Tu Carrito de Compras</h2>
-            
-            {items.length === 0 ? (
-                <p className="CarritoVacio">No hay productos en el carrito.</p>
-            ) : (
-                <>
-                    <div className="ListaProductosCarrito">
-                        {items.map((item) => (
-                            <div key={item.id} className="ItemCarrito">
-                                <img src={item.imageUrl} alt={item.title} className="ImagenMini" />
-                                <div className="InfoItem">
-                                    <h4>{item.title}</h4>
-                                    <p>{item.model}</p>
-                                    <p className="PrecioItem">{item.price} x {item.cantidad}</p>
-                                </div>
-                                {/* BOTÓN 1: Eliminar el producto */}
-                                <button 
-                                    className="btn-eliminar" 
-                                    onClick={() => onEliminar(item.id)}
-                                >
-                                    Eliminar
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* BOTÓN 2: Comprar productos */}
-                    <div className="AccionesCarrito">
-                        <button className="btn-comprar" onClick={handleCompra}>
-                            Proceder a la Compra
-                        </button>
-                    </div>
-                </>
-            )}
+      <div className="ContenedorCarrito compra-exitosa">
+        <div className="exito-icono">✅</div>
+        <h2 className="exito-titulo">¡Compra realizada!</h2>
+        <p className="exito-sub">Tu pedido ha sido registrado correctamente.</p>
+        <div className="exito-detalle">
+          <span>Total pagado:</span>
+          <strong>${ordenCreada.total?.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</strong>
         </div>
+        <p className="exito-hint">El administrador procesará tu orden a la brevedad.</p>
+        <button className="btn-comprar" onClick={() => setOrdenCreada(null)}>
+          Seguir comprando
+        </button>
+      </div>
     );
+  }
+
+  // ── Carrito vacío ──────────────────────────────────────────
+  if (items.length === 0) {
+    return (
+      <div className="ContenedorCarrito carrito-vacio">
+        <div className="vacio-icono">🛒</div>
+        <p>Tu carrito está vacío.</p>
+      </div>
+    );
+  }
+
+  // ── Carrito con items ──────────────────────────────────────
+  return (
+    <div className="ContenedorCarrito">
+      <h2 className="carrito-titulo">Tu carrito</h2>
+
+      <div className="ListaProductosCarrito">
+        {items.map(item => {
+          const precioUnitario = item.precioFinal ?? item.precio ?? 0;
+          return (
+            <div key={item._id} className="ItemCarrito">
+              <div className="item-img-wrap">
+                {item.imageUrl
+                  ? <img src={item.imageUrl} alt={item.nombre} className="ImagenMini" />
+                  : <span className="item-placeholder">📦</span>}
+              </div>
+              <div className="InfoItem">
+                <h4>{item.nombre}</h4>
+                <span className="item-cat">{item.categoria}</span>
+                <p className="PrecioItem">
+                  ${precioUnitario.toLocaleString('es-MX')} × {item.cantidad}
+                </p>
+              </div>
+              <button
+                className="btn-eliminar-item"
+                onClick={() => onEliminar(item._id)}
+                title="Quitar del carrito"
+              >
+                ✕
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="carrito-resumen">
+        <div className="resumen-fila">
+          <span>Artículos:</span>
+          <span>{items.reduce((a, i) => a + i.cantidad, 0)}</span>
+        </div>
+        <div className="resumen-fila total">
+          <span>Total:</span>
+          <strong>${total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</strong>
+        </div>
+      </div>
+
+      {error && <p className="carrito-error">{error}</p>}
+
+      <div className="AccionesCarrito">
+        <button
+          className="btn-comprar"
+          onClick={handleCompra}
+          disabled={cargando}
+        >
+          {cargando ? 'Procesando...' : '💳 Finalizar compra'}
+        </button>
+        <button className="btn-vaciar" onClick={onLimpiarCarrito}>
+          Vaciar carrito
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Carrito;

@@ -116,6 +116,67 @@
     transition: background-color 0.2s;
 }
 
-.col-acciones { display: flex; gap: 6px; }
-.btn-editar, .btn-eliminar { border: none; background: transparent; cursor: pointer; font-size: 1rem; }
-.btn-cancelar { margin-left: 8px; background: #999; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+.col-acciones { display: flex; gap: 6px; align-items: center; }
+.btn-editar, .btn-eliminar { border: none; background: transparent; cursor: pointer; font-size: 1rem; border-radius: 6px; padding: 4px 6px; transition: background 0.2s; }
+.btn-editar:hover  { background: #edf5ff; }
+.btn-eliminar:hover { background: #fdecea; }
+.btn-cancelar-inv  { background: none; border: 1px solid #ccc; color: #666; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.btn-cancelar-inv:hover { border-color: #e74c3c; color: #e74c3c; }
+.btn-update { background: #2c4ecf !important; }
+.btn-update:hover { background: #1a38b5 !important; }
+
+/* Alertas */
+.inv-alert { padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 0.8rem; }
+.inv-alert.error { background: #fdecea; color: #c0392b; border: 1px solid #f5b7b1; }
+.inv-alert.exito { background: #eafaf1; color: #1a9950; border: 1px solid #a9dfbf; }
+
+/* Fila resaltada al editar */
+.fila-activa { background: #edf5ff !important; }
+
+/* Preview de imagen en el formulario */
+.img-preview { max-width: 100%; max-height: 80px; border-radius: 6px; margin-top: 6px; object-fit: contain; border: 1px solid #eee; }
+
+/* Imagen en tabla */
+.col-img { width: 60px; text-align: center; }
+.tabla-img { width: 48px; height: 48px; object-fit: contain; border-radius: 6px; border: 1px solid #eee; }
+.sin-img { font-size: 1.4rem; opacity: 0.3; }
+
+/* Columna oferta */
+.col-oferta { text-align: center; }
+.inv-oferta-badge { background: #eafaf1; color: #1a9950; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+.inv-sin-oferta { color: #ccc; }
+
+/* Badge stock en tabla */
+.inv-stock-badge { font-size: 0.8rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+.inv-stock-badge.ok      { background: #eafaf1; color: #1a9950; }
+.inv-stock-badge.bajo    { background: #fef9e7; color: #c07800; }
+.inv-stock-badge.agotado { background: #fdecea; color: #c0392b; }
+
+/* Toggle oferta */
+.oferta-toggle { padding: 0.4rem 0; }
+.toggle-label { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #1a1d2e; }
+.toggle-text { user-select: none; }
+
+/* Precio calculado preview */
+.precio-calculado { font-size: 0.82rem; color: #1a9950; font-weight: 600; margin-top: 4px; display: block; }
+
+/* Fila de dos columnas */
+.inv-row { display: flex; gap: 1rem; }
+.inv-row .form-group { flex: 1; }
+
+/* Textarea */
+.form-textarea { border: none; border-bottom: 2px solid #ccc; background: transparent; font-size: 0.9rem; color: #333; outline: none; resize: none; width: 100%; font-family: inherit; transition: border-color 0.2s; }
+.form-textarea:focus { border-bottom-color: #21593d; }
+
+/* Título tabla */
+.inv-titulo-tabla { font-weight: 700; color: #1a1d2e; font-size: 0.95rem; }
+
+/* Card formulario modo edición */
+.card-formulario-inventario { background: #d9d9d9; border: 3px solid #3498db; border-radius: 5px; padding: 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.card-formulario-inventario.modo-edicion { border-color: #173325; }
+
+/* Mensaje cargando */
+.cargando-msg { color: #8a8fa3; padding: 1rem 0; font-size: 0.9rem; }
+
+/* Inventario content layout */
+.inventario-content-layout { display: flex; gap: 1.5rem; }

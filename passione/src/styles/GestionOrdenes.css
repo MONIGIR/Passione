@@ -1,58 +1,211 @@
-/* Contenedor de la vista de órdenes */
 .ordenes-view-container {
-width: 100%;
-padding: 10px;
-box-sizing: border-box;
+  width: 100%;
+  animation: fadeIn 0.35s ease;
+}
+
+/* ── HEADER ──────────────────────────────────── */
+.ordenes-header-badges {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-badge-num {
+  background: #eafaf1;
+  color: #1a9950;
+  border: 1px solid #a9dfbf;
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-refresh-ordenes {
+  background: #f0f2f7;
+  border: 1px solid #dde0ec;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #5a5e75;
+  transition: all 0.2s;
+}
+.btn-refresh-ordenes:hover { background: #173325; color: #fff; }
+
+/* ── ALERTAS ─────────────────────────────────── */
+.ordenes-alert {
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+/* ── SKELETON ────────────────────────────────── */
+.ordenes-skeleton { display: flex; flex-direction: column; gap: 0.8rem; }
+.skeleton-orden-row {
+  height: 56px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e8eaf0 25%, #f5f6fa 50%, #e8eaf0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ── VACÍO ───────────────────────────────────── */
+.ordenes-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3rem;
+  color: #b0b5c8;
+  font-size: 1rem;
+}
+.ordenes-vacio span { font-size: 2.5rem; }
+.ordenes-vacio small { font-size: 0.82rem; color: #c8ccd8; }
+
+/* ── TABLA PRINCIPAL ─────────────────────────── */
+.tabla-marco-azul {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 1px solid #e8eaef;
+  overflow: hidden;
 }
 
 .tabla-ordenes {
-width: 100%;
-border-collapse: collapse;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.87rem;
 }
 
-/* Cabeceras de la tabla */
 .tabla-ordenes thead th {
-padding: 15px 10px;
-font-size: 0.75rem;
-font-weight: bold;
-color: #333;
-text-align: center;
-border-bottom: 1px solid #ddd;
-text-transform: uppercase;
+  text-align: left;
+  padding: 0.9rem 1rem;
+  background: #f8f9fd;
+  color: #8a8fa3;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #f0f2f7;
 }
 
-/* Celdas de la tabla */
-.tabla-ordenes tbody td {
-padding: 12px 10px;
-text-align: center;
-font-size: 0.85rem;
-color: #555;
-border-bottom: 1px solid #f0f0f0;
+.fila-orden {
+  border-bottom: 1px solid #f5f6fa;
+  transition: background 0.2s;
+  animation: fadeInUp 0.35s ease both;
+}
+.fila-orden:hover { background: #fafbff; }
+.fila-orden.fila-expandida { background: #f0f4ff; }
+
+.fila-orden td { padding: 0.9rem 1rem; vertical-align: middle; color: #3a3d4e; }
+
+/* Columnas */
+.td-num  { width: 40px; color: #b0b5c8; font-weight: 600; text-align: center; }
+
+.td-cliente { min-width: 160px; }
+.cliente-nombre { display: block; font-weight: 600; color: #1a1d2e; }
+.cliente-email  { display: block; font-size: 0.78rem; color: #8a8fa3; }
+
+.td-items { text-align: center; }
+.btn-ver-items {
+  background: #f0f2f7;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #5a5e75;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-ver-items:hover { background: #173325; color: #fff; }
+
+.td-total { font-weight: 700; color: #1a1d2e; white-space: nowrap; }
+.td-fecha { font-size: 0.78rem; color: #8a8fa3; white-space: nowrap; }
+.td-acciones { white-space: nowrap; }
+
+/* ── BADGES DE ESTADO ────────────────────────── */
+.badge-estado {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.estado-pendiente  { background: #edf5ff; color: #2c4ecf; }
+.estado-procesando { background: #fef3e2; color: #c07800; }
+.estado-enviado    { background: #f3eeff; color: #7c3aed; }
+.estado-completado { background: #eafaf1; color: #1a9950; }
+.estado-cancelado  { background: #fdecea; color: #c0392b; }
+
+/* ── SELECT DE ESTADO ────────────────────────── */
+.select-estado {
+  border: 1px solid #dde0ec;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.82rem;
+  color: #1a1d2e;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.select-estado:focus  { border-color: #173325; }
+.select-estado:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.spinner-mini { font-size: 0.85rem; margin-left: 6px; animation: spin 1s linear infinite; display: inline-block; }
+
+/* ── FILA DETALLE ────────────────────────────── */
+.fila-detalle td { padding: 0; border-bottom: 2px solid #e8eaef; }
+
+.detalle-items {
+  background: #f8f9fd;
+  padding: 1rem 1.5rem;
+  animation: fadeIn 0.25s ease;
 }
 
-/* Filas vacías o con datos: Efecto zebra opcional */
-.tabla-ordenes tbody tr:nth-child(even) {
-background-color: #fafafa;
+.tabla-items-detalle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
 }
 
-/* BOTÓN CANCELAR: Estilo profesional */
-.btn-cancelar {
-background-color: #ff4d4d;
-color: white;
-border: none;
-padding: 6px 12px;
-border-radius: 4px;
-font-size: 0.75rem;
-cursor: pointer;
-transition: background-color 0.2s;
+.tabla-items-detalle thead th {
+  padding: 0.5rem 0.8rem;
+  color: #8a8fa3;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid #e8eaef;
 }
 
-.btn-cancelar:hover {
-background-color: #cc0000;
+.tabla-items-detalle tbody td {
+  padding: 0.6rem 0.8rem;
+  color: #3a3d4e;
+  border-bottom: 1px solid #eef0f6;
+  vertical-align: middle;
 }
 
-/* Ajuste para que la tabla sea responsiva si hay muchas columnas */
-.dashboard-main-content {
-overflow-x: auto;
+.item-detalle-img {
+  width: 42px; height: 42px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #e8eaef;
+  background: #fff;
 }
+
+.item-nombre { font-weight: 600; color: #1a1d2e; }
+.item-sku    { color: #8a8fa3; font-size: 0.78rem; }
+.precio-original-detalle { color: #b0b5c8; font-size: 0.78rem; }
+
+/* ── ANIMACIONES ─────────────────────────────── */
+@keyframes fadeIn    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp  { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer   { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@keyframes spin      { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

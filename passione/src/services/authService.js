@@ -14,8 +14,12 @@ export const logoutApi = async () => {
   await api.post("/auth/logout");
 };
 
-// Verifica la sesión activa al recargar la página (lee la cookie del browser)
 export const getMeApi = async () => {
   const { data } = await api.get("/auth/me");
+  return data.datos;
+};
+
+export const actualizarPerfilApi = async (payload) => {
+  const { data } = await api.put("/auth/perfil", payload);
   return data.datos;
 };

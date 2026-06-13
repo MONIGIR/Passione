@@ -11,12 +11,12 @@ export const obtenerProductos = async (req, res, next) => {
       buscar,
       categoria,
       activo,
-      ordenar = "-createdAt", // Más recientes primero
+      enOferta,
+      ordenar = "-createdAt",
       pagina = 1,
       limite = 20,
     } = req.query;
 
-    // Construir filtro dinámico
     const filtro = {};
 
     if (buscar) {
@@ -29,6 +29,7 @@ export const obtenerProductos = async (req, res, next) => {
 
     if (categoria) filtro.categoria = categoria;
     if (activo !== undefined) filtro.activo = activo === "true";
+    if (enOferta !== undefined) filtro.enOferta = enOferta === "true";
 
     // Paginación
     const skip = (parseInt(pagina) - 1) * parseInt(limite);

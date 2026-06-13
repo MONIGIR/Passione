@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import { registro, login, logout, getMe } from "../controllers/authController.js";
+import { registro, login, logout, getMe, actualizarPerfil } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -29,6 +29,7 @@ router.post(
 router.post("/logout", logout);
 
 // Ruta protegida: requiere cookie válida
-router.get("/me", protect, getMe);
+router.get("/me",     protect, getMe);
+router.put("/perfil", protect, actualizarPerfil);
 
 export default router;

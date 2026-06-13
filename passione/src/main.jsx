@@ -39,8 +39,8 @@ const RootApp = () => {
   }
 
   if (!usuario) return <LoginRegister onLogin={handleLogin} />;
-  if (usuario.role === "admin") return <AdminDash onLogout={handleLogout} />;
-  return <App onLogout={handleLogout} />;
+  if (usuario.role === "admin") return <AdminDash usuario={usuario} onLogout={handleLogout} />;
+  return <App usuario={usuario} onLogout={handleLogout} />;
 };
 
 createRoot(document.getElementById("root")).render(
