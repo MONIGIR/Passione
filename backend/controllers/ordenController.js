@@ -1,9 +1,33 @@
 import Orden from "../models/Orden.js";
 import Producto from "../models/Producto.js";
 
-// ─────────────────────────────────────────────────────────────
-// POST /api/ordenes  — usuario autenticado finaliza compra
-// ─────────────────────────────────────────────────────────────
+/**
+ * Crea una orden (checkout). Implementa una transacción manual en 6 pasos:
+ * valida el carrito, trae los productos en una sola query, valida stock,
+ * decrementa stock de forma atómica por documento con rollback manual ante
+ * agotamiento concurrente, construye snapshots de precio y persiste la orden.
+ *
+ * @route   POST /api/ordenes
+ * @access  Privado (requiere `protect`)
+ * @async
+ * @param {import("express").Request} req  Lee `req.usuario` (comprador, vía `protect`).
+ * @param {Object} req.body
+ * @param {Array<{productoId:string, cantidad:number}>} req.body.items  Líneas del carrito.
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 201 + `{ exito:true, datos:OrdenDoc }`.
+ * @throws {Error} 400 si el carrito está vacío o un producto no existe/está inactivo;
+ *   409 si el stock es insuficiente o se agota durante el proceso (con rollback). DB → 500.
+ *
+ * [SEGURIDAD/LÓGICA — REQUIERE CLARIFICACIÓN] No se validan tipos de `productoId`
+ * ni `cantidad`:
+ *   - `productoId` como objeto podría inyectarse en el `$in`/`findOneAndUpdate`.
+ *   - Una `cantidad` negativa hace que `{ stock: { $gte: cantidad } }` siempre pase
+ *     y que `$inc: { stock: -cantidad }` AUMENTE el stock, además de producir
+ *     `subtotal`/`total` negativos. Debe validarse `cantidad` entero ≥ 1.
+ * [RENDIMIENTO] El decremento y el rollback son bucles secuenciales de queries
+ * (N llamadas); sin transacción de MongoDB el rollback no es atómico.
+ */
 export const crearOrden = async (req, res, next) => {
   try {
     const { items } = req.body; // [{ productoId, cantidad }]
@@ -92,9 +116,20 @@ export const crearOrden = async (req, res, next) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────
-// GET /api/ordenes  — admin: todas las órdenes
-// ─────────────────────────────────────────────────────────────
+/**
+ * Lista todas las órdenes del sistema, más recientes primero.
+ *
+ * @route   GET /api/ordenes
+ * @access  Privado · Admin (`protect, soloAdmin`)
+ * @async
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, conteo:number, datos:OrdenDoc[] }`.
+ * @throws {Error} Errores de DB → 500.
+ *
+ * [RENDIMIENTO] Sin paginación: carga todas las órdenes en memoria.
+ */
 export const obtenerOrdenes = async (req, res, next) => {
   try {
     const ordenes = await Orden.find().sort({ createdAt: -1 });
@@ -104,10 +139,26 @@ export const obtenerOrdenes = async (req, res, next) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────
-// PUT /api/ordenes/:id  — admin: cambia estado
-//   Si el nuevo estado es "cancelado" → restaura el stock
-// ─────────────────────────────────────────────────────────────
+/**
+ * Cambia el estado de una orden. Al transicionar a `"cancelado"` (y sólo en la
+ * transición, no si ya estaba cancelada) restaura el stock de cada ítem.
+ *
+ * @route   PUT /api/ordenes/:id
+ * @access  Privado · Admin
+ * @async
+ * @param {import("express").Request} req
+ * @param {Object} req.params
+ * @param {string} req.params.id  ObjectId de la orden.
+ * @param {Object} req.body
+ * @param {"pendiente"|"procesando"|"enviado"|"completado"|"cancelado"} req.body.estado  Nuevo estado.
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {Promise<void>} 200 + `{ exito:true, datos:OrdenDoc }`.
+ * @throws {Error} 400 si el estado no es válido; 404 si la orden no existe. DB → 500.
+ *
+ * [RENDIMIENTO] La restauración de stock es un bucle secuencial de updates sin
+ * transacción (mismo patrón que el rollback de `crearOrden`).
+ */
 export const actualizarOrden = async (req, res, next) => {
   try {
     const { estado } = req.body;

@@ -1,5 +1,33 @@
 import mongoose from "mongoose";
 
+/**
+ * @typedef {Object} ProductoDoc
+ * @property {string}  nombre       Nombre visible. Requerido, máx. 100, trim.
+ * @property {string}  descripcion  Descripción. Máx. 500, trim. (Ver nota: campo duplicado.)
+ * @property {string}  sku          Stock Keeping Unit. Requerido, único, uppercase, trim.
+ * @property {string}  categoria    Enum de 6 categorías. Default `"Otros"`.
+ * @property {number}  precio       Precio base. Requerido, min 0.
+ * @property {number}  costo        Costo interno. Default 0, min 0.
+ * @property {number}  stock        Unidades disponibles. Requerido, min 0, default 0.
+ * @property {number}  stockMinimo  Umbral de alerta de stock. Default 5, min 0.
+ * @property {string}  ubicacion    Ubicación física en almacén. Default "".
+ * @property {string}  proveedor    Nombre del proveedor. Default "".
+ * @property {boolean} activo       Soft-delete / visibilidad. Default true.
+ * @property {string}  imageUrl     URL de imagen. Default "".
+ * @property {boolean} enOferta     Activa el descuento. Default false.
+ * @property {number}  descuento    Porcentaje 0–100. Default 0.
+ */
+
+/**
+ * Esquema Mongoose del modelo Producto.
+ *
+ * Rol arquitectónico: Modelo de dominio del catálogo/inventario.
+ *
+ * [REQUIERE CLARIFICACIÓN DE LÓGICA] El campo `descripcion` está declarado DOS
+ * veces en este esquema. En un objeto literal JS la segunda clave sobreescribe
+ * a la primera, por lo que la definición efectiva es la del final del objeto.
+ * No produce error en runtime, pero es ambiguo: debe eliminarse una de las dos.
+ */
 const productoSchema = new mongoose.Schema(
   {
     nombre: {
@@ -80,6 +108,7 @@ const productoSchema = new mongoose.Schema(
       min: [0, "El descuento no puede ser negativo"],
       max: [100, "El descuento no puede superar 100%"],
     },
+    // NOTA: segunda declaración de `descripcion` — sobreescribe a la de arriba.
     descripcion: {
       type: String,
       default: "",
@@ -91,29 +120,43 @@ const productoSchema = new mongoose.Schema(
 );
 
 // ──── ÍNDICES ──────────────────────────────
-// Mejoran el rendimiento de las consultas frecuentes
+// Mejoran el rendimiento de las consultas frecuentes.
+// NOTA: el índice de texto no se aprovecha porque el controlador busca con $regex.
 productoSchema.index({ nombre: "text", descripcion: "text" }); // Búsqueda de texto
 productoSchema.index({ categoria: 1 });
 productoSchema.index({ activo: 1 });
 
 // ──── VIRTUALS ─────────────────────────────
-// Campo calculado: ¿tiene stock bajo?
+
+/**
+ * Virtual `stockBajo`: indica si el producto está en o por debajo del mínimo.
+ * @this {ProductoDoc}
+ * @returns {boolean} `true` si `stock <= stockMinimo`.
+ */
 productoSchema.virtual("stockBajo").get(function () {
   return this.stock <= this.stockMinimo;
 });
 
-// Campo calculado: valor total en inventario
+/**
+ * Virtual `valorTotal`: valor monetario del inventario de este producto.
+ * @this {ProductoDoc}
+ * @returns {number} `precio * stock`.
+ */
 productoSchema.virtual("valorTotal").get(function () {
   return this.precio * this.stock;
 });
 
-// Precio final aplicando descuento
+/**
+ * Virtual `precioFinal`: precio tras aplicar descuento si está en oferta.
+ * @this {ProductoDoc}
+ * @returns {number} Precio con descuento (2 decimales) o `precio` si no hay oferta.
+ */
 productoSchema.virtual("precioFinal").get(function () {
   if (!this.enOferta || !this.descuento) return this.precio;
   return parseFloat((this.precio * (1 - this.descuento / 100)).toFixed(2));
 });
 
-// Incluir virtuals en JSON y Object
+// Incluir virtuals al serializar a JSON / objeto plano.
 productoSchema.set("toJSON", { virtuals: true });
 productoSchema.set("toObject", { virtuals: true });
 
